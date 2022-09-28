@@ -11,7 +11,21 @@ class MethodChannelFlutterPluginCodelab extends FlutterPluginCodelabPlatform {
 
   @override
   Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
+    final version =
+        await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
+  }
+
+  @override
+  Future<int?> onKeyDown(int key) async {
+    final int? numNotesOn =
+        await methodChannel.invokeMethod('onKeyDown', [key]);
+    return numNotesOn;
+  }
+
+  @override
+  Future<int?> onKeyUp(int key) async {
+    final int? numNotesOn = await methodChannel.invokeMethod('onKeyUp', [key]);
+    return numNotesOn;
   }
 }

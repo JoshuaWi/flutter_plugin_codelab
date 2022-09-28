@@ -8,7 +8,8 @@ abstract class FlutterPluginCodelabPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static FlutterPluginCodelabPlatform _instance = MethodChannelFlutterPluginCodelab();
+  static FlutterPluginCodelabPlatform _instance =
+      MethodChannelFlutterPluginCodelab();
 
   /// The default instance of [FlutterPluginCodelabPlatform] to use.
   ///
@@ -25,5 +26,13 @@ abstract class FlutterPluginCodelabPlatform extends PlatformInterface {
 
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
+  }
+
+  Future<int?> onKeyDown(int key) {
+    throw UnimplementedError('onKeyDown(int key) has not been implemented.');
+  }
+
+  Future<int?> onKeyUp(int key) {
+    throw UnimplementedError('onKeyUp(int key) has not been implemented.');
   }
 }

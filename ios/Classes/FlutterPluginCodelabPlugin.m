@@ -1,4 +1,5 @@
 #import "FlutterPluginCodelabPlugin.h"
+#import "FLRSynth.h"
 #if __has_include(<flutter_plugin_codelab/flutter_plugin_codelab-Swift.h>)
 #import <flutter_plugin_codelab/flutter_plugin_codelab-Swift.h>
 #else
@@ -8,8 +9,42 @@
 #import "flutter_plugin_codelab-Swift.h"
 #endif
 
-@implementation FlutterPluginCodelabPlugin
+@implementation FlutterPluginCodelabPlugin {
+                                            int _numKeysDown;
+                                            FLRSynthRef _synth;
+                                          }
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   [SwiftFlutterPluginCodelabPlugin registerWithRegistrar:registrar];
+}
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    _synth = FLRSynthCreate();
+    FLRSynthStart(_synth);
+  }
+  return self;
+}
+
+- (void)dealloc {
+  FLRSynthDestroy(_synth);
+}
+
+- (void)handleMethodCall:(FlutterMethodCall *)call
+                  result:(FlutterResult)result {
+  if ([@"getPlatformVersion" isEqualToString:call.method]) {
+    result([@"iOS "
+        stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
+  } else if ([@"onKeyDown" isEqualToString:call.method]) {
+    FLRSynthKeyDown(_synth, [call.arguments[0] intValue]);
+    _numKeysDown += 1;
+    result(@(_numKeysDown));
+  } else if ([@"onKeyUp" isEqualToString:call.method]) {
+    FLRSynthKeyUp(_synth, [call.arguments[0] intValue]);
+
+    _numKeysDown -= 1;
+    result(@(_numKeysDown));
+  } else {
+    result(FlutterMethodNotImplemented);
+  }
 }
 @end
